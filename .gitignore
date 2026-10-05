@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+.venv-*/
+venv/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# dbt
+target/
+dbt_packages/
+logs/
+*.log
+
+# Airflow
+airflow/logs/
+airflow/.airflow/
+
+# Local data
+data/raw/
+data/generated/
+
+# IDE
+.vscode/
+.idea/
