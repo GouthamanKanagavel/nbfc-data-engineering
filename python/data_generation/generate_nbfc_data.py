@@ -346,6 +346,130 @@ def generate_emi_schedule():
         ],
     )
 
+def generate_payments():
+    rows = []
+    payment_id = 1
+
+    for loan_number in range(1, LOANS + 1):
+        loan_id = f"LOAN{loan_number:08d}"
+
+        # Not every loan has payment history yet
+        if random.random() > 0.70:
+            continue
+
+        payment_count = random.randint(3, 18)
+
+        for _ in range(payment_count):
+            payment_date = random_date(
+                date(2024, 2, 1),
+                date(2026, 9, 30)
+            )
+
+            payment_amount = round(
+                random.uniform(2_000, 80_000),
+                2
+            )
+
+            payment_mode = random.choice([
+                "UPI",
+                "BANK_TRANSFER",
+                "NACH",
+                "CHEQUE",
+                "CASH"
+            ])
+
+            payment_status = random.choices(
+                ["SUCCESS", "FAILED"],
+                weights=[95, 5],
+                k=1
+            )[0]
+
+            rows.append({
+                "payment_id": f"PAY{payment_id:09d}",
+                "loan_id": loan_id,
+                "payment_date": payment_date,
+                "payment_amount": payment_amount,
+                "payment_mode": payment_mode,
+                "payment_status": payment_status
+            })
+
+            payment_id += 1
+
+    write_csv(
+        "payments.csv",
+        rows,
+        [
+            "payment_id",
+            "loan_id",
+            "payment_date",
+            "payment_amount",
+            "payment_mode",
+            "payment_status"
+        ]
+
+)
+
+
+def generate_collections():
+    rows = []
+    collection_id = 1
+
+    for loan_number in range(1, LOANS + 1):
+        loan_id = f"LOAN{loan_number:08d}"
+
+        # Collection activity is concentrated on a subset of loans
+        if random.random() > 0.35:
+            continue
+
+        collection_count = random.randint(1, 6)
+
+        for _ in range(collection_count):
+            collection_date = random_date(
+                date(2024, 3, 1),
+                date(2026, 9, 30)
+            )
+
+            amount_collected = round(
+                random.uniform(1_000, 50_000),
+                2
+            )
+
+            collection_method = random.choice([
+                "FIELD_AGENT",
+                "CALL_CENTER",
+                "BRANCH",
+                "DIGITAL"
+            ])
+
+            collection_status = random.choices(
+                ["SUCCESS", "PARTIAL", "FAILED"],
+                weights=[75, 20, 5],
+                k=1
+            )[0]
+
+            rows.append({
+                "collection_id": f"COL{collection_id:09d}",
+                "loan_id": loan_id,
+                "collection_date": collection_date,
+                "amount_collected": amount_collected,
+                "collection_method": collection_method,
+                "collection_status": collection_status
+            })
+
+            collection_id += 1
+
+    write_csv(
+    "collections.csv",
+    rows,
+    [
+        "collection_id",
+        "loan_id",
+        "collection_date",
+        "amount_collected",
+        "collection_method",
+        "collection_status"
+    ],
+    )
 
 def main():
     generate_branches()
@@ -362,139 +486,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-def generate_payments():
-    rows = []
-
-    payment_id = 1
-
-    for loan_number in range(1, LOANS + 1):
-
-        loan_id = f"LOAN{loan_number:08d}"
-
-        # Roughly 70% of loans have regular payments
-        if random.random() > 0.70:
-            continue
-
-        payment_count = random.randint(3, 18)
-
-        for _ in range(payment_count):
-
-            payment_date = random_date(
-                date(2024, 2, 1),
-                date(2026, 9, 30),
-            )
-
-            payment_amount = round(
-                random.uniform(2_000, 80_000), 2
-            )
-
-            rows.append(
-                {
-                    "payment_id": f"PAY{payment_id:09d}",
-                    "loan_id": loan_id,
-                    "payment_date": payment_date.isoformat(),
-                    "payment_amount": payment_amount,
-                    "payment_mode": random.choice(
-                        [
-                            "UPI",
-                            "BANK_TRANSFER",
-                            "NACH",
-                            "CHEQUE",
-                            "CASH",
-                        ]
-                    ),
-                    "payment_status": random.choice(
-                        [
-                            "SUCCESS",
-                            "SUCCESS",
-                            "SUCCESS",
-                            "FAILED",
-                        ]
-                    ),
-                }
-            )
-
-            payment_id += 1
-
-    write_csv(
-        "payments.csv",
-        rows,
-        [
-            "payment_id",
-            "loan_id",
-            "payment_date",
-            "payment_amount",
-            "payment_mode",
-            "payment_status",
-        ],
-    )
-
-
-def generate_collections():
-    rows = []
-
-    collection_id = 1
-
-    for loan_number in range(1, LOANS + 1):
-
-        loan_id = f"LOAN{loan_number:08d}"
-
-        # Collections primarily target delinquent accounts
-        if random.random() > 0.35:
-            continue
-
-        collection_count = random.randint(1, 6)
-
-        for _ in range(collection_count):
-
-            collection_date = random_date(
-                date(2024, 3, 1),
-                date(2026, 9, 30),
-            )
-
-            amount_collected = round(
-                random.uniform(1_000, 50_000), 2
-            )
-
-            rows.append(
-                {
-                    "collection_id": f"COL{collection_id:09d}",
-                    "loan_id": loan_id,
-                    "customer_id": f"CUST{random.randint(1, CUSTOMERS):06d}",
-                    "collection_date": collection_date.isoformat(),
-                    "amount_collected": amount_collected,
-                    "collection_method": random.choice(
-                        [
-                            "FIELD_AGENT",
-                            "CALL_CENTER",
-                            "BRANCH",
-                            "DIGITAL",
-                        ]
-                    ),
-                    "collection_status": random.choice(
-                        [
-                            "SUCCESS",
-                            "SUCCESS",
-                            "PARTIAL",
-                            "FAILED",
-                        ]
-                    ),
-                }
-            )
-
-            collection_id += 1
-
-    write_csv(
-        "collections.csv",
-        rows,
-        [
-            "collection_id",
-            "loan_id",
-            "customer_id",
-            "collection_date",
-            "amount_collected",
-            "collection_method",
-            "collection_status",
-        ],
-    )
