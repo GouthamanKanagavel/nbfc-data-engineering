@@ -1,0 +1,51 @@
+branch_id,branch_name,city,state,region,branch_manager,opening_date
+BR0001,NBFC Branch 0001,Bengaluru,Tamil Nadu,North,Manager 0001,2017-09-30
+BR0002,NBFC Branch 0002,Madurai,Kerala,South,Manager 0002,2022-08-03
+BR0003,NBFC Branch 0003,Bengaluru,Gujarat,South,Manager 0003,2015-05-03
+BR0004,NBFC Branch 0004,Bengaluru,Andhra Pradesh,West,Manager 0004,2020-08-31
+BR0005,NBFC Branch 0005,Chennai,Andhra Pradesh,Central,Manager 0005,2017-06-21
+BR0006,NBFC Branch 0006,Kochi,Telangana,South,Manager 0006,2023-07-06
+BR0007,NBFC Branch 0007,Coimbatore,Gujarat,North,Manager 0007,2018-02-12
+BR0008,NBFC Branch 0008,Coimbatore,Andhra Pradesh,North,Manager 0008,2016-02-23
+BR0009,NBFC Branch 0009,Bengaluru,Gujarat,South,Manager 0009,2019-01-10
+BR0010,NBFC Branch 0010,Pune,Telangana,South,Manager 0010,2023-03-08
+BR0011,NBFC Branch 0011,Kochi,Karnataka,Central,Manager 0011,2015-11-19
+BR0012,NBFC Branch 0012,Hyderabad,Maharashtra,West,Manager 0012,2022-11-25
+BR0013,NBFC Branch 0013,Bengaluru,Tamil Nadu,West,Manager 0013,2023-09-02
+BR0014,NBFC Branch 0014,Hyderabad,Karnataka,West,Manager 0014,2016-02-18
+BR0015,NBFC Branch 0015,Mumbai,Telangana,Central,Manager 0015,2022-02-16
+BR0016,NBFC Branch 0016,Pune,Kerala,North,Manager 0016,2018-12-26
+BR0017,NBFC Branch 0017,Madurai,Telangana,South,Manager 0017,2021-10-31
+BR0018,NBFC Branch 0018,Coimbatore,Andhra Pradesh,West,Manager 0018,2020-03-08
+BR0019,NBFC Branch 0019,Mumbai,Telangana,West,Manager 0019,2022-09-05
+BR0020,NBFC Branch 0020,Pune,Tamil Nadu,West,Manager 0020,2015-05-12
+BR0021,NBFC Branch 0021,Pune,Gujarat,North,Manager 0021,2015-09-29
+BR0022,NBFC Branch 0022,Madurai,Maharashtra,West,Manager 0022,2022-05-08
+BR0023,NBFC Branch 0023,Kochi,Gujarat,Central,Manager 0023,2016-08-08
+BR0024,NBFC Branch 0024,Hyderabad,Kerala,West,Manager 0024,2023-05-10
+BR0025,NBFC Branch 0025,Hyderabad,Gujarat,Central,Manager 0025,2019-01-22
+BR0026,NBFC Branch 0026,Madurai,Kerala,Central,Manager 0026,2016-01-08
+BR0027,NBFC Branch 0027,Chennai,Karnataka,West,Manager 0027,2022-01-14
+BR0028,NBFC Branch 0028,Coimbatore,Gujarat,South,Manager 0028,2019-04-26
+BR0029,NBFC Branch 0029,Mumbai,Delhi,North,Manager 0029,2021-03-16
+BR0030,NBFC Branch 0030,Chennai,Karnataka,North,Manager 0030,2023-08-15
+BR0031,NBFC Branch 0031,Pune,Karnataka,North,Manager 0031,2019-11-16
+BR0032,NBFC Branch 0032,Coimbatore,Delhi,South,Manager 0032,2023-02-05
+BR0033,NBFC Branch 0033,Hyderabad,Kerala,South,Manager 0033,2022-01-05
+BR0034,NBFC Branch 0034,Hyderabad,Andhra Pradesh,West,Manager 0034,2019-03-12
+BR0035,NBFC Branch 0035,Coimbatore,Tamil Nadu,North,Manager 0035,2020-06-24
+BR0036,NBFC Branch 0036,Chennai,Karnataka,North,Manager 0036,2018-06-13
+BR0037,NBFC Branch 0037,Madurai,Tamil Nadu,West,Manager 0037,2021-05-12
+BR0038,NBFC Branch 0038,Bengaluru,Karnataka,Central,Manager 0038,2015-10-11
+BR0039,NBFC Branch 0039,Coimbatore,Kerala,Central,Manager 0039,2021-03-01
+BR0040,NBFC Branch 0040,Coimbatore,Telangana,Central,Manager 0040,2017-05-17
+BR0041,NBFC Branch 0041,Madurai,Telangana,Central,Manager 0041,2022-07-14
+BR0042,NBFC Branch 0042,Pune,Delhi,Central,Manager 0042,2016-05-10
+BR0043,NBFC Branch 0043,Madurai,Andhra Pradesh,South,Manager 0043,2018-10-16
+BR0044,NBFC Branch 0044,Chennai,Andhra Pradesh,West,Manager 0044,2015-01-30
+BR0045,NBFC Branch 0045,Bengaluru,Tamil Nadu,West,Manager 0045,2015-10-04
+BR0046,NBFC Branch 0046,Chennai,Maharashtra,South,Manager 0046,2020-10-06
+BR0047,NBFC Branch 0047,Madurai,Telangana,Central,Manager 0047,2017-05-27
+BR0048,NBFC Branch 0048,Coimbatore,Delhi,West,Manager 0048,2023-10-19
+BR0049,NBFC Branch 0049,Kochi,Gujarat,West,Manager 0049,2016-01-22
+BR0050,NBFC Branch 0050,Bengaluru,Gujarat,North,Manager 0050,2019-10-01
