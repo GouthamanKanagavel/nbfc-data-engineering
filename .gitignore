@@ -34,3 +34,11 @@ data/generated/
 # IDE
 .vscode/
 .idea/
+
+# Generated NBFC datasets and local backups
+data/s3_upload/raw/
+data/s3_backup/
+*.bak
+
+# dbt local configuration and generated artifacts
+dbt/nbfc_dbt/.user.yml

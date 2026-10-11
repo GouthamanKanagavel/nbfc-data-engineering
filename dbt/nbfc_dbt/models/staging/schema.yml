@@ -1,0 +1,87 @@
+version: 2
+
+models:
+
+  - name: stg_branches
+    columns:
+      - name: branch_id
+        data_tests:
+          - not_null
+          - unique
+
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: credit_score
+        data_tests:
+          - not_null
+
+  - name: stg_loan_applications
+    columns:
+      - name: application_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        data_tests:
+          - not_null
+
+      - name: branch_id
+        data_tests:
+          - not_null
+
+  - name: stg_loans
+    columns:
+      - name: loan_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: application_id
+        data_tests:
+          - not_null
+
+      - name: customer_id
+        data_tests:
+          - not_null
+
+      - name: branch_id
+        data_tests:
+          - not_null
+
+  - name: stg_emi_schedule
+    columns:
+      - name: loan_id
+        data_tests:
+          - not_null
+
+      - name: installment_number
+        data_tests:
+          - not_null
+
+  - name: stg_payments
+    columns:
+      - name: payment_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: loan_id
+        data_tests:
+          - not_null
+
+  - name: stg_collections
+    columns:
+      - name: collection_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: loan_id
+        data_tests:
+          - not_null

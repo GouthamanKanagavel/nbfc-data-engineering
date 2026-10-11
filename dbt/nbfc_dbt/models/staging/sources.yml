@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: raw
+    database: NBFC_DW
+    schema: RAW
+
+    tables:
+      - name: raw_branches
+
+      - name: raw_customers
+
+      - name: raw_loan_applications
+
+      - name: raw_loans
+
+      - name: raw_emi_schedule
+
+      - name: raw_payments
+
+      - name: raw_collections
