@@ -1,7 +1,6 @@
 version: 2
 
 models:
-
   - name: stg_branches
     columns:
       - name: branch_id
@@ -15,7 +14,6 @@ models:
         data_tests:
           - not_null
           - unique
-
       - name: credit_score
         data_tests:
           - not_null
@@ -26,11 +24,9 @@ models:
         data_tests:
           - not_null
           - unique
-
       - name: customer_id
         data_tests:
           - not_null
-
       - name: branch_id
         data_tests:
           - not_null
@@ -41,15 +37,16 @@ models:
         data_tests:
           - not_null
           - unique
-
       - name: application_id
         data_tests:
           - not_null
-
+          - relationships:
+              arguments:
+                to: ref('stg_loan_applications')
+                field: application_id
       - name: customer_id
         data_tests:
           - not_null
-
       - name: branch_id
         data_tests:
           - not_null
@@ -59,7 +56,10 @@ models:
       - name: loan_id
         data_tests:
           - not_null
-
+          - relationships:
+              arguments:
+                to: ref('stg_loans')
+                field: loan_id
       - name: installment_number
         data_tests:
           - not_null
@@ -70,10 +70,13 @@ models:
         data_tests:
           - not_null
           - unique
-
       - name: loan_id
         data_tests:
           - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_loans')
+                field: loan_id
 
   - name: stg_collections
     columns:
@@ -81,7 +84,10 @@ models:
         data_tests:
           - not_null
           - unique
-
       - name: loan_id
         data_tests:
           - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_loans')
+                field: loan_id
