@@ -2,7 +2,11 @@ from pathlib import Path
 import csv
 from collections import Counter
 
-DATA_DIR = Path("data/generated")
+import sys
+
+DATA_DIR = Path(
+    sys.argv[1] if len(sys.argv) > 1 else "data/generated"
+)
 
 
 def read_csv(filename):
@@ -71,6 +75,7 @@ def main():
     ]:
         print(f"{name:<25} {len(rows):>10,}")
 
+    validation_failed = False
     print("\nPRIMARY KEY CHECKS")
     print("-" * 60)
 
@@ -87,6 +92,7 @@ def main():
         duplicates = check_unique(rows, column)
 
         if duplicates:
+            validation_failed = True
             print(
                 f"{name:<25} FAIL - "
                 f"{len(duplicates):,} duplicate {column}"
@@ -166,6 +172,7 @@ def main():
 
     for name, invalid in checks:
         if invalid:
+            validation_failed = True
             print(
                 f"{name:<25} FAIL - "
                 f"{len(invalid):,} invalid references"
@@ -221,6 +228,7 @@ def main():
             )
 
         if failures:
+            validation_failed = True
             print(
                 f"{name:<25} FAIL - "
                 f"{len(failures):,} empty required fields"
@@ -266,6 +274,7 @@ def main():
 
     for name, failures in checks:
         if failures:
+            validation_failed = True
             print(
                 f"{name:<25} FAIL - "
                 f"{len(failures):,} invalid records"
@@ -273,8 +282,80 @@ def main():
         else:
             print(f"{name:<25} PASS")
 
+    print("\nLOAN-APPLICATION CONSISTENCY")
+    print("-" * 60)
+
+    applications_by_id = {
+        row["application_id"]: row
+        for row in applications
+    }
+
+    application_mismatches = []
+
+    for loan in loans:
+        application = applications_by_id.get(
+            loan["application_id"]
+        )
+
+        if application is None:
+            continue
+
+        fields_to_compare = [
+            ("customer_id", "Customer ID"),
+            ("branch_id", "Branch ID"),
+            ("application_date", "Application date"),
+            ("loan_type", "Loan type"),
+            ("requested_amount", "Requested amount"),
+            ("tenure_months", "Tenure"),
+            ("risk_grade", "Risk grade"),
+        ]
+
+        for field, label in fields_to_compare:
+            if loan[field] != application[field]:
+                application_mismatches.append(
+                    f"{loan['loan_id']}: {label} mismatch"
+                )
+
+    rejected_or_pending_loans = [
+        loan
+        for loan in loans
+        if (
+            loan["application_id"] in applications_by_id
+            and applications_by_id[
+                loan["application_id"]
+            ]["application_status"] != "APPROVED"
+        )
+    ]
+
+    if application_mismatches:
+        validation_failed = True
+        print(
+            f"Loan/application field consistency FAIL - "
+            f"{len(application_mismatches):,} mismatches"
+        )
+        for mismatch in application_mismatches[:10]:
+            print(f"  {mismatch}")
+    else:
+        print("Loan/application field consistency PASS")
+
+    if rejected_or_pending_loans:
+        validation_failed = True
+        print(
+            f"Approved application requirement FAIL - "
+            f"{len(rejected_or_pending_loans):,} loans "
+            f"linked to non-approved applications"
+        )
+    else:
+        print("Approved application requirement PASS")
+
     print("\n" + "=" * 60)
-    print("VALIDATION COMPLETED")
+
+    if validation_failed:
+        print("VALIDATION FAILED")
+        print("=" * 60)
+        raise SystemExit(1)
+
+    print("VALIDATION PASSED")
     print("=" * 60)
 
 

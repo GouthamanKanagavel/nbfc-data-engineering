@@ -42,3 +42,5 @@ data/s3_backup/
 
 # dbt local configuration and generated artifacts
 dbt/nbfc_dbt/.user.yml
+# Temporary corrected QA dataset
+data/qa_corrected/
