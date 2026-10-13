@@ -87,16 +87,39 @@ The current DPD snapshot uses a reporting date of **2026-10-07** to make results
 
 ## Validation Results
 
-Latest validated results:
+Original baseline
 
-- 10,000 rows in `FACT_LOAN`
-- 10,000 distinct loan IDs
-- 22 dbt tests passed, with zero warnings or errors
-- No null loan IDs or DPD values in the final integrity check
-- No negative overdue EMI balances
-- PAR flags passed the tested nesting checks
+The original synthetic dataset contains 10,000 loan records. The initial loan and application datasets were generated independently, resulting in inconsistencies between loan accounts and their application records. The original baseline is retained for comparison and is not the corrected QA dataset.
 
-The generated portfolio currently shows 6,368 loans at 90+ DPD. These are synthetic-data results, not evidence of real-world portfolio performance. Payment allocation and DPD rules are simplified assumptions and should be reviewed before any production use.
+Corrected QA pipeline
+
+A separate QA pipeline was created using corrected loan, EMI schedule, payment, and collection data. The corrected loan dataset contains only loans linked to approved applications.
+
+Validated results:
+
+8,476 rows in NBFC_DW.QA_ANALYTICS.FACT_LOAN_QA
+
+8,476 distinct loan IDs
+
+12 dbt models built successfully
+
+2 QA-specific dbt tests passed with zero warnings or errors
+
+Zero missing application links
+
+Zero loans linked to non-approved applications
+
+Zero customer ID, branch ID, or requested-amount mismatches against the application source
+
+Monetary values retain two decimal places in the QA fact table
+
+The QA models use dedicated QA_STAGING, QA_INTERMEDIATE, and QA_ANALYTICS schemas. The original model SQL files were left unchanged.
+
+Business logic and limitations
+
+The DPD snapshot uses a fixed reporting date of 2026-10-07 and a simplified oldest-due-first allocation of successful payments. The synthetic EMI schedules, payment records, and collections are not a fully reconciled financial ledger. DPD and portfolio-at-risk metrics are intended for demonstration and require additional business validation before production use.
+
+The original NBFC_DW.ANALYTICS.FACT_LOAN table could not be verified in the current Snowflake environment during the QA validation. Its existence and state remain unconfirmed.
 
 ## Running dbt
 
