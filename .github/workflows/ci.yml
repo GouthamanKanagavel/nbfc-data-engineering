@@ -92,6 +92,7 @@ jobs:
       SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
       SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       SNOWFLAKE_PRIVATE_KEY_PATH: /tmp/nbfc_ci_rsa_key.pem
+      SNOWFLAKE_PRIVATE_KEY_SHA256: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_SHA256 }}
 
     steps:
       - name: Check out repository
@@ -112,6 +113,21 @@ jobs:
           umask 077
           printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > "$SNOWFLAKE_PRIVATE_KEY_PATH"
           chmod 600 "$SNOWFLAKE_PRIVATE_KEY_PATH"
+
+      - name: Verify temporary key integrity
+        run: |
+          ACTUAL="$(openssl rsa \
+            -in "$SNOWFLAKE_PRIVATE_KEY_PATH" \
+            -outform DER 2>/dev/null |
+            openssl dgst -sha256 |
+            awk '{print $NF}')"
+
+          if [ "$ACTUAL" != "$SNOWFLAKE_PRIVATE_KEY_SHA256" ]; then
+            echo "Private-key integrity check failed."
+            exit 1
+          fi
+
+          echo "Private-key integrity check passed."
 
       - name: Create CI dbt profile
         run: |
