@@ -2,11 +2,16 @@ from pathlib import Path
 from datetime import date, timedelta
 import csv
 import random
+import sys
 
 
 random.seed(42)
 
-OUTPUT_DIR = Path("data/generated")
+
+
+OUTPUT_DIR = Path(
+    sys.argv[1] if len(sys.argv) > 1 else "data/generated"
+)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 CUSTOMERS = 10_000

@@ -1,0 +1,38 @@
+name: NBFC Data Engineering CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  python-data-quality:
+    name: Python Data Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check Python syntax
+        run: |
+          python -m py_compile \
+            python/data_generation/generate_nbfc_data.py \
+            python/data_generation/validate_nbfc_data.py
+
+      - name: Generate and validate synthetic data
+        run: |
+          TEMP_DATA_DIR="$(mktemp -d)"
+          python python/data_generation/generate_nbfc_data.py "$TEMP_DATA_DIR"
+          python python/data_generation/validate_nbfc_data.py "$TEMP_DATA_DIR"
