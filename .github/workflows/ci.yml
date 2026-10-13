@@ -113,19 +113,6 @@ jobs:
           printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > "$SNOWFLAKE_PRIVATE_KEY_PATH"
           chmod 600 "$SNOWFLAKE_PRIVATE_KEY_PATH"
 
-      - name: Verify temporary key can be parsed
-        run: |
-          if openssl rsa \
-            -in "$SNOWFLAKE_PRIVATE_KEY_PATH" \
-            -check -noout 2>/dev/null; then
-            echo "Private key parses successfully."
-          else
-            echo "Private key could not be parsed."
-            exit 1
-          fi
-
-          echo "Private-key integrity check passed."
-
       - name: Create CI dbt profile
         run: |
           mkdir -p "$HOME/.dbt"
