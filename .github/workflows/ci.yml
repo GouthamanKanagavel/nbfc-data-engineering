@@ -91,7 +91,7 @@ jobs:
       SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
       SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
       SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-      SNOWFLAKE_PRIVATE_KEY_PATH: ${{ runner.temp }}/nbfc_ci_rsa_key.pem
+      SNOWFLAKE_PRIVATE_KEY_PATH: /tmp/nbfc_ci_rsa_key.pem
 
     steps:
       - name: Check out repository
