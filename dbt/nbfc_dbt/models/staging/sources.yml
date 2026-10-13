@@ -19,3 +19,11 @@ sources:
       - name: raw_payments
 
       - name: raw_collections
+  - name: qa
+    database: NBFC_DW
+    schema: QA
+    tables:
+      - name: raw_loans_v2
+      - name: raw_emi_schedule_v2
+      - name: raw_payments_v2
+      - name: raw_collections_v2

@@ -44,3 +44,6 @@ data/s3_backup/
 dbt/nbfc_dbt/.user.yml
 # Temporary corrected QA dataset
 data/qa_corrected/
+
+# Local S3 upload bundles (never commit generated CSVs)
+data/s3_upload/
