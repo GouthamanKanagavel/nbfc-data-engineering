@@ -17,20 +17,22 @@ The platform processes synthetic financial-services data covering:
 ## Technology Stack
 
 **Implemented and validated**
-- Python for synthetic data generation
-- AWS S3 for raw data storage
+- Python for synthetic data generation and validation
+- AWS S3 for raw CSV storage
 - Snowflake for data warehousing
 - SQL and dbt for ELT transformations and data quality tests
-- Git for source control
+- Git and GitHub for source control
+- GitHub Actions for automated Python data-quality checks, dbt project parsing, and Snowflake QA integration tests
 
 **Planned extensions**
 - Snowpipe automated ingestion
 - Apache Airflow orchestration
 - Docker-based execution
-- GitHub Actions CI/CD
 - Expanded operational monitoring and recovery workflows
 
 ## Architecture
+
+The platform maintains a baseline pipeline and a separate corrected QA pipeline.
 
 ```text
 Python Synthetic Data Generator
@@ -51,10 +53,35 @@ Python Synthetic Data Generator
      dbt ANALYTICS MARTS
               |
               v
-       FACT_LOAN
+          FACT_LOAN
+
+Corrected QA Dataset
+              |
+              v
+       AWS S3 / QA CSVs
+              |
+              v
+        Snowflake QA
+              |
+              v
+       dbt QA_STAGING
+              |
+              v
+    dbt QA_INTERMEDIATE
+              |
+              v
+     dbt QA_ANALYTICS
+              |
+              v
+        FACT_LOAN_QA
+              |
+              v
+     Snowflake QA Tests
 ```
 
-The current Snowflake RAW refresh uses staged CSV files and `COPY INTO`. Automated Snowpipe ingestion and Airflow orchestration are planned extensions, not yet part of the validated workflow.
+The baseline and corrected QA paths are kept separate. The QA pipeline uses dedicated Snowflake schemas and corrected source tables, leaving the original model SQL unchanged.
+
+The current raw-data refresh uses staged CSV files and `COPY INTO`. GitHub Actions runs three jobs: Python data-quality validation, dbt project parsing, and Snowflake QA integration tests. The Snowflake integration job uses a dedicated CI role and key-pair authentication. Snowpipe and Airflow are planned extensions, not part of the validated workflow.
 
 ## Data Model
 
