@@ -36,3 +36,45 @@ jobs:
           TEMP_DATA_DIR="$(mktemp -d)"
           python python/data_generation/generate_nbfc_data.py "$TEMP_DATA_DIR"
           python python/data_generation/validate_nbfc_data.py "$TEMP_DATA_DIR"
+
+  dbt-parse:
+    name: dbt Parse
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: dbt/nbfc_dbt
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dbt dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Create temporary dbt profile
+        run: |
+          mkdir -p "$HOME/.dbt"
+          cat > "$HOME/.dbt/profiles.yml" <<'EOF'
+          nbfc_dbt:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: ci_placeholder
+                user: ci_placeholder
+                password: ci_placeholder
+                role: ACCOUNTADMIN
+                database: NBFC_DW
+                warehouse: CI_WAREHOUSE
+                schema: CI
+                threads: 1
+          EOF
+
+      - name: Parse dbt project
+        run: dbt parse --target ci --no-partial-parse
