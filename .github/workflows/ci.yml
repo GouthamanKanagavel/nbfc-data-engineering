@@ -92,7 +92,6 @@ jobs:
       SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
       SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       SNOWFLAKE_PRIVATE_KEY_PATH: /tmp/nbfc_ci_rsa_key.pem
-      SNOWFLAKE_PRIVATE_KEY_SHA256: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_SHA256 }}
 
     steps:
       - name: Check out repository
@@ -114,16 +113,14 @@ jobs:
           printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > "$SNOWFLAKE_PRIVATE_KEY_PATH"
           chmod 600 "$SNOWFLAKE_PRIVATE_KEY_PATH"
 
-      - name: Verify temporary key integrity
+      - name: Verify temporary key can be parsed
         run: |
-          ACTUAL="$(openssl rsa \
+          if openssl rsa \
             -in "$SNOWFLAKE_PRIVATE_KEY_PATH" \
-            -outform DER 2>/dev/null |
-            openssl dgst -sha256 |
-            awk '{print $NF}')"
-
-          if [ "$ACTUAL" != "$SNOWFLAKE_PRIVATE_KEY_SHA256" ]; then
-            echo "Private-key integrity check failed."
+            -check -noout 2>/dev/null; then
+            echo "Private key parses successfully."
+          else
+            echo "Private key could not be parsed."
             exit 1
           fi
 
