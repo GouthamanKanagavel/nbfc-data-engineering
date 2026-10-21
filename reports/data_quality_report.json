@@ -1,0 +1,113 @@
+{
+  "report_name": "NBFC Corrected QA Source Data Quality Report",
+  "generated_at_utc": "2026-10-21T11:23:36.439309+00:00",
+  "git_commit": "070bf8d8f9e2a2b8c02250c40b537f52a0241bc2",
+  "scope": {
+    "source_tables": {
+      "loans": "NBFC_DW.QA.RAW_LOANS_V2",
+      "emi_schedule": "NBFC_DW.QA.RAW_EMI_SCHEDULE_V2",
+      "payments": "NBFC_DW.QA.RAW_PAYMENTS_V2",
+      "collections": "NBFC_DW.QA.RAW_COLLECTIONS_V2"
+    }
+  },
+  "status": "PASS",
+  "source_row_counts": {
+    "loans": 8476,
+    "emi_schedule": 279486,
+    "payments": 93753,
+    "collections": 9136
+  },
+  "metrics": {
+    "loan_application_missing_links": 0,
+    "loan_application_consistency_violations": 0,
+    "loan_key_quality": {
+      "null_ids": 0,
+      "duplicate_rows": 0
+    },
+    "orphan_child_records": {
+      "emi_schedule": 0,
+      "payments": 0,
+      "collections": 0
+    },
+    "loan_requested_amount_summary": {
+      "null_requested": 0,
+      "negative_requested": 0,
+      "total_requested": "8632789634.75",
+      "min_requested": "50012.93",
+      "max_requested": "1999846.25"
+    },
+    "total_source_rows_across_four_tables": 390851
+  },
+  "checks": [
+    {
+      "name": "No missing loan application links",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "Loan/application fields consistent and application approved",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "No null loan IDs",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "No duplicate loan IDs",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "No orphan emi_schedule loan references",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "No orphan payments loan references",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "No orphan collections loan references",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "Requested amounts are present and non-negative",
+      "status": "PASS",
+      "observed": {
+        "null": 0,
+        "negative": 0
+      },
+      "expected": {
+        "null": 0,
+        "negative": 0
+      }
+    }
+  ],
+  "fact_table_metrics": {
+    "status": "UNAVAILABLE",
+    "reason": "FACT_LOAN_QA was not visible in NBFC_DW table metadata to the current CI role during this run."
+  },
+  "limitations": [
+    "This report covers corrected QA source tables only.",
+    "No fact-table, DPD, or PAR metrics are reported in this version.",
+    "Passing source checks does not certify a reconciled financial ledger.",
+    "Financial summaries are descriptive and not audited balances."
+  ],
+  "snowflake_session": {
+    "account_name": "JV18413",
+    "active_role": "NBFC_CI_ROLE",
+    "active_database": "NBFC_DW",
+    "active_warehouse": "COMPUTE_WH"
+  }
+}
