@@ -1,0 +1,10 @@
+
+version: 2
+
+models:
+  - name: fact_loan_qa
+    columns:
+      - name: loan_id
+        data_tests:
+          - not_null
+          - unique
