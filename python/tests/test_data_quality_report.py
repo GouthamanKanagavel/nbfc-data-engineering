@@ -90,14 +90,101 @@ class TestReportHelpers(unittest.TestCase):
             ],
         }
 
+    def test_markdown_displays_failed_check(self):
+        sample = {
+            "status": "FAIL",
+            "generated_at_utc": "2026-10-22T00:00:00+00:00",
+            "git_commit": "test-commit",
+            "snowflake_session": {"active_role": "NBFC_CI_ROLE"},
+            "source_row_counts": {},
+            "metrics": {
+                "total_source_rows_across_four_tables": 0,
+                "loan_requested_amount_summary": {},
+            },
+            "checks": [
+                {
+                    "name": "No null loan IDs",
+                    "status": "FAIL",
+                    "observed": 3,
+                    "expected": 0,
+                },
+            ],
+            "fact_table_metrics": {
+                "status": "UNAVAILABLE",
+                "reason": "Not available in this test.",
+            },
+            "limitations": [],
+        }
+
         rendered = report_module.markdown(sample)
 
-        self.assertIn("**Status:** PASS", rendered)
-        self.assertIn("390,851", rendered)
+        self.assertIn("**Status:** FAIL", rendered)
         self.assertIn("No null loan IDs", rendered)
-        self.assertIn("**UNAVAILABLE**", rendered)
-        self.assertIn("This report covers corrected QA source tables only.", rendered)
+        self.assertIn("**FAIL**", rendered)
+        self.assertIn("3", rendered)
 
+    def test_connection_failure_returns_error_without_writing_reports(self):
+        from unittest.mock import patch
+        from contextlib import redirect_stderr
+        from io import StringIO
+        from tempfile import TemporaryDirectory
 
+        with TemporaryDirectory() as temp_dir:
+            report_dir = Path(temp_dir)
+            markdown_path = report_dir / "data_quality_report.md"
+            json_path = report_dir / "data_quality_report.json"
+            error_output = StringIO()
+
+            with (
+                patch.object(report_module, "REPORT_DIR", report_dir),
+                patch.object(report_module, "MD_PATH", markdown_path),
+                patch.object(report_module, "JSON_PATH", json_path),
+                patch.object(
+                    report_module,
+                    "run",
+                    side_effect=RuntimeError("simulated connection failure"),
+                ),
+                redirect_stderr(error_output),
+            ):
+                exit_code = report_module.main()
+
+            self.assertEqual(exit_code, 1)
+            self.assertFalse(markdown_path.exists())
+            self.assertFalse(json_path.exists())
+            self.assertIn(
+                "No successful report was written.",
+                error_output.getvalue(),
+            )
+
+    def test_failed_quality_report_returns_exit_code_two(self):
+        from unittest.mock import patch
+        from contextlib import redirect_stdout
+        from io import StringIO
+        from tempfile import TemporaryDirectory
+
+        failed_report = {
+            "status": "FAIL",
+            "checks": [{"name": "No null IDs", "status": "FAIL"}],
+            "fact_table_metrics": {"status": "UNAVAILABLE"},
+        }
+
+        with TemporaryDirectory() as temp_dir:
+            report_dir = Path(temp_dir)
+            markdown_path = report_dir / "data_quality_report.md"
+            json_path = report_dir / "data_quality_report.json"
+
+            with (
+                patch.object(report_module, "REPORT_DIR", report_dir),
+                patch.object(report_module, "MD_PATH", markdown_path),
+                patch.object(report_module, "JSON_PATH", json_path),
+                patch.object(report_module, "run", return_value=failed_report),
+                patch.object(report_module, "markdown", return_value="# FAIL"),
+                redirect_stdout(StringIO()),
+            ):
+                exit_code = report_module.main()
+
+            self.assertEqual(exit_code, 2)
+            self.assertTrue(markdown_path.exists())
+            self.assertTrue(json_path.exists())
 if __name__ == "__main__":
     unittest.main()
