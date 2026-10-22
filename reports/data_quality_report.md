@@ -1,8 +1,8 @@
 # NBFC Corrected QA Source Data Quality Report
 
 - **Status:** PASS
-- **Generated UTC:** 2026-10-21T11:23:36.439309+00:00
-- **Git commit:** 070bf8d8f9e2a2b8c02250c40b537f52a0241bc2
+- **Generated UTC:** 2026-10-22T14:05:26.056550+00:00
+- **Git commit:** 082ab63ea6b87b77041a036626302e8c08f14473
 - **Snowflake role:** NBFC_CI_ROLE
 
 ## Source row counts
@@ -43,11 +43,11 @@
 
 ## Fact table metrics
 
-**UNAVAILABLE** — FACT_LOAN_QA was not visible in NBFC_DW table metadata to the current CI role during this run.
+**AVAILABLE** — Model-derived portfolio metrics; not audited balances. DPD/PAR interpretation depends on the model's reporting date and assumptions.
 
 ## Limitations
 
 - This report covers corrected QA source tables only.
-- No fact-table, DPD, or PAR metrics are reported in this version.
+- Fact-table, DPD, and PAR metrics are model-derived and may not represent audited balances.
 - Passing source checks does not certify a reconciled financial ledger.
 - Financial summaries are descriptive and not audited balances.

@@ -96,7 +96,7 @@ def run() -> dict[str, Any]:
         },
         "limitations": [
             "This report covers corrected QA source tables only.",
-            "No fact-table, DPD, or PAR metrics are reported in this version.",
+            "Fact-table, DPD, and PAR metrics are model-derived and may not represent audited balances.",
             "Passing source checks does not certify a reconciled financial ledger.",
             "Financial summaries are descriptive and not audited balances.",
         ],
@@ -260,6 +260,45 @@ def run() -> dict[str, Any]:
                 "loan_requested_amount_summary": safe(financial),
                 "total_source_rows_across_four_tables": sum(counts.values()),
             }
+            try:
+                fact = one(
+                    cur,
+                    """
+                    SELECT
+                        COUNT(*) AS loan_count,
+                        COUNT(DISTINCT loan_id) AS distinct_loan_count,
+                        SUM(requested_amount) AS total_requested_amount,
+                        SUM(sanctioned_amount) AS total_sanctioned_amount,
+                        SUM(disbursed_amount) AS total_disbursed_amount,
+                        MAX(max_dpd) AS maximum_dpd,
+                        COUNT_IF(is_par_30 = 1) AS par_30_loan_count,
+                        COUNT_IF(is_par_60 = 1) AS par_60_loan_count,
+                        COUNT_IF(is_par_90 = 1) AS par_90_loan_count,
+                        SUM(estimated_outstanding_principal)
+                            AS estimated_outstanding_principal,
+                        AVG(payment_coverage_pct) AS avg_payment_coverage_pct,
+                        AVG(collection_efficiency_pct)
+                            AS avg_collection_efficiency_pct
+                    FROM NBFC_DW.QA_ANALYTICS.FACT_LOAN_QA
+                    """,
+                )
+                report["fact_table_metrics"] = {
+                    "status": "AVAILABLE",
+                    "metrics": safe(fact),
+                    "note": (
+                        "Model-derived portfolio metrics; not audited balances. "
+                        "DPD/PAR interpretation depends on the model's reporting "
+                        "date and assumptions."
+                    ),
+                }
+            except Exception as exc:
+                report["fact_table_metrics"] = {
+                    "status": "UNAVAILABLE",
+                    "reason": (
+                        f"Fact-table query failed ({type(exc).__name__}). "
+                        "See execution logs for diagnosis."
+                    ),
+                }
             report["checks"] = checks
             report["status"] = (
                 "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
@@ -319,7 +358,7 @@ def markdown(report: dict[str, Any]) -> str:
         "## Fact table metrics",
         "",
         f"**{report['fact_table_metrics']['status']}** — "
-        f"{report['fact_table_metrics']['reason']}",
+        f"{report['fact_table_metrics'].get('reason') or report['fact_table_metrics'].get('note', '')}",
         "",
         "## Limitations",
         "",

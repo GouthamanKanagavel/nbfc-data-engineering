@@ -1,7 +1,7 @@
 {
   "report_name": "NBFC Corrected QA Source Data Quality Report",
-  "generated_at_utc": "2026-10-21T11:23:36.439309+00:00",
-  "git_commit": "070bf8d8f9e2a2b8c02250c40b537f52a0241bc2",
+  "generated_at_utc": "2026-10-22T14:05:26.056550+00:00",
+  "git_commit": "082ab63ea6b87b77041a036626302e8c08f14473",
   "scope": {
     "source_tables": {
       "loans": "NBFC_DW.QA.RAW_LOANS_V2",
@@ -95,12 +95,26 @@
     }
   ],
   "fact_table_metrics": {
-    "status": "UNAVAILABLE",
-    "reason": "FACT_LOAN_QA was not visible in NBFC_DW table metadata to the current CI role during this run."
+    "status": "AVAILABLE",
+    "metrics": {
+      "loan_count": 8476,
+      "distinct_loan_count": 8476,
+      "total_requested_amount": "8632789634.75",
+      "total_sanctioned_amount": "8632789634.75",
+      "total_disbursed_amount": "8632789634.75",
+      "maximum_dpd": 977,
+      "par_30_loan_count": 7956,
+      "par_60_loan_count": 6483,
+      "par_90_loan_count": 5393,
+      "estimated_outstanding_principal": "3819435736.56",
+      "avg_payment_coverage_pct": "44.90465786",
+      "avg_collection_efficiency_pct": "2.16837541"
+    },
+    "note": "Model-derived portfolio metrics; not audited balances. DPD/PAR interpretation depends on the model's reporting date and assumptions."
   },
   "limitations": [
     "This report covers corrected QA source tables only.",
-    "No fact-table, DPD, or PAR metrics are reported in this version.",
+    "Fact-table, DPD, and PAR metrics are model-derived and may not represent audited balances.",
     "Passing source checks does not certify a reconciled financial ledger.",
     "Financial summaries are descriptive and not audited balances."
   ],

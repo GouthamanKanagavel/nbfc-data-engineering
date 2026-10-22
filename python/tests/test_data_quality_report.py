@@ -123,6 +123,37 @@ class TestReportHelpers(unittest.TestCase):
         self.assertIn("**FAIL**", rendered)
         self.assertIn("3", rendered)
 
+    def test_markdown_displays_available_fact_table_metrics(self):
+        sample = {
+            "status": "PASS",
+            "generated_at_utc": "2026-10-22T00:00:00+00:00",
+            "git_commit": "test-commit",
+            "snowflake_session": {"active_role": "NBFC_CI_ROLE"},
+            "source_row_counts": {},
+            "metrics": {
+                "total_source_rows_across_four_tables": 0,
+                "loan_requested_amount_summary": {},
+            },
+            "checks": [],
+            "fact_table_metrics": {
+                "status": "AVAILABLE",
+                "metrics": {
+                    "loan_count": 8476,
+                    "distinct_loan_count": 8476,
+                },
+                "note": "Model-derived metrics; not audited balances.",
+            },
+            "limitations": [
+                "Fact-table, DPD, and PAR metrics are model-derived.",
+            ],
+        }
+
+        rendered = report_module.markdown(sample)
+
+        self.assertIn("**AVAILABLE**", rendered)
+        self.assertIn("Model-derived metrics; not audited balances.", rendered)
+        self.assertIn("Fact-table, DPD, and PAR metrics are model-derived.", rendered)
+
     def test_connection_failure_returns_error_without_writing_reports(self):
         from unittest.mock import patch
         from contextlib import redirect_stderr
