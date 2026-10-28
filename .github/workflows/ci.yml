@@ -144,6 +144,12 @@ jobs:
           PROFILE
           chmod 600 "$HOME/.dbt/profiles.yml"
 
+      - name: Verify CI public-key fingerprint
+        run: |
+          openssl pkey -in "$SNOWFLAKE_PRIVATE_KEY_PATH" -pubout -outform DER \
+            | openssl dgst -sha256 -binary \
+            | openssl enc -base64
+
       - name: Verify Snowflake connection
         run: dbt debug --profile nbfc_dbt --target ci
 
