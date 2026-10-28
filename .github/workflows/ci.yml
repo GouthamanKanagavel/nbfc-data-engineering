@@ -210,6 +210,13 @@ jobs:
           printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > "$SNOWFLAKE_PRIVATE_KEY_PATH"
           chmod 600 "$SNOWFLAKE_PRIVATE_KEY_PATH"
 
+      - name: Validate private key format
+        run: |
+          test -s "$SNOWFLAKE_PRIVATE_KEY_PATH"
+          head -n 1 "$SNOWFLAKE_PRIVATE_KEY_PATH" | grep -Fx -- "-----BEGIN PRIVATE KEY-----"
+          tail -n 1 "$SNOWFLAKE_PRIVATE_KEY_PATH" | grep -Fx -- "-----END PRIVATE KEY-----"
+          openssl pkey -in "$SNOWFLAKE_PRIVATE_KEY_PATH" -noout
+
       - name: Generate data quality report
         run: python ../../python/reporting/generate_data_quality_report.py
 
