@@ -217,5 +217,32 @@ class TestReportHelpers(unittest.TestCase):
             self.assertEqual(exit_code, 2)
             self.assertTrue(markdown_path.exists())
             self.assertTrue(json_path.exists())
+    
+    def test_overall_status_fails_when_dbt_tests_fail(self):
+        checks = [{"name": "No null IDs", "status": "PASS"}]
+        dbt_results = {"status": "FAIL", "failed": 1}
+
+        self.assertEqual(
+            report_module.determine_overall_status(checks, dbt_results),
+            "FAIL",
+        )
+
+    def test_overall_status_passes_when_dbt_results_unavailable(self):
+        checks = [{"name": "No null IDs", "status": "PASS"}]
+        dbt_results = {"status": "UNAVAILABLE"}
+
+        self.assertEqual(
+            report_module.determine_overall_status(checks, dbt_results),
+            "PASS",
+        )
+
+    def test_overall_status_passes_when_source_and_dbt_tests_pass(self):
+        checks = [{"name": "No null IDs", "status": "PASS"}]
+        dbt_results = {"status": "PASS", "failed": 0}
+
+        self.assertEqual(
+            report_module.determine_overall_status(checks, dbt_results),
+            "PASS",
+        )
 if __name__ == "__main__":
     unittest.main()
