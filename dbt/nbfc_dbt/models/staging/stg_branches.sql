@@ -5,7 +5,7 @@ SELECT
     TRIM(branch_name) AS branch_name,
     TRIM(city) AS city,
     TRIM(state) AS state,
-    TRIM(branch_type) AS branch_type,
-    TRIM(manager_name) AS manager_name,
+    TRIM(region) AS region,
+    TRIM(branch_manager) AS branch_manager,
     opening_date
 FROM {{ source('raw', 'raw_branches') }}

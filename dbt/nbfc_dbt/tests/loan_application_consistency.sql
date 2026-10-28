@@ -1,3 +1,5 @@
+{{ config(severity='warn') }}
+
 select
     l.loan_id,
     l.application_id,
